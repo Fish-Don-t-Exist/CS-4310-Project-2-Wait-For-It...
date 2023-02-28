@@ -39,6 +39,7 @@ Wait::~Wait()
 Wait::Result Wait::exec()
 {
     ProcessID pid = (atoi(arguments().get("PROCESS_ID")));
+    int status;
     
     if (pid < 0)
     {
@@ -46,8 +47,11 @@ Wait::Result Wait::exec()
     	return InvalidArgument;
     }
 	
-
-    // Done
-    // I have no idea what the success is for
-    return Success;
+    if (waitpid(pid, &status, 0) == -1)
+	{
+		ERROR("An error occurred");
+		return IOError;
+	}
+	
+	
 }
